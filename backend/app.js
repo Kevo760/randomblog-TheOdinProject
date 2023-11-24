@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 const postRouter = require('./routes/postRoute');
 
 var app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Set up mongoose connection
 const connectDB = async () => {
