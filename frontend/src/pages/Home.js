@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from 'styled-components';
 import MiniPostBox from "../components/MiniPostBox";
 import { Link } from "react-router-dom";
+import { PostForm } from "../components/PostForm";
+import { usePostsContext } from "../hooks/usePostsContext";
 
 
 const HomePage = styled.div`
@@ -13,15 +15,16 @@ const HomePage = styled.div`
         display: flex;
         flex-direction: column;
         gap: 10px;
-        margin-top: 10px;
         padding: 10px;
+        margin-top: 10px;
         width: fit-content;
         height: fit-content;
+        margin-bottom: 10px;
     }
 `
 
 const Home = () => {
-    const [posts, setPosts] = useState(null);
+    const { posts, dispatch } = usePostsContext()
 
 
     useEffect(() => {
@@ -30,12 +33,12 @@ const Home = () => {
             const json = await res.json()
 
             if(res.ok) {
-                setPosts(json)
+                dispatch({ type: 'SET_POSTS', payload: json })
             }
         }
 
         fetchPost()
-    }, [])
+    }, [dispatch])
 
     return (
         <HomePage>
@@ -46,7 +49,8 @@ const Home = () => {
                             <MiniPostBox post={post}/>
                         </Link>
                     ))
-                }             
+                }
+                <PostForm />             
            </div>
         </HomePage>
     )

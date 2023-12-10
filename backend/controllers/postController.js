@@ -57,8 +57,15 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
     }
      
     try {
-        await Post.findByIdAndDelete(id)
-        .then(res.status(200).json({message: 'successfully delete post'}));
+        const findPostToDelete = await Post.findById(id)
+
+        if(findPostToDelete) {
+            await Post.findByIdAndDelete(id)
+            .then(res.status(200).json(findPostToDelete));
+        } else {
+            res.status(400).json({error: error.message});
+        }
+        
 
     } catch(error) {
 
