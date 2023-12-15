@@ -3,6 +3,7 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const { body, validationResult } = require("express-validator");
 
 // Get all 
 exports.get_all_post = asyncHandler(async (req, res, next) => {
@@ -30,23 +31,47 @@ exports.get_a_post = asyncHandler(async (req, res, next) => {
 });
 
 // Create a new post
-exports.create_post = asyncHandler(async (req, res, next) => {
+exports.create_post = [
+    body('title')
+    .trim()
+    .isLength({min: 3})
+    .escape()
+    .withMessage('Title must have at least 3 characters'),
+    body('body')
+    .trim()
+    .isLength({min: 3})
+    .escape()
+    .withMessage('Body must have at least 3 characters')
+    .isLength({max: 100})
+    .escape()
+    .withMessage('Body must be less than 100 characters')
+    ,
+    asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
     const { title, body } = req.body;
+
+
     const mainUser = await User.findOne({ username: 'NotAdmin'})
-    // Add post to db
-    try {
-        const newPost = await Post.create({
-            user: mainUser,
-            title,
-            body
-        });
+    if(!errors.isEmpty()) {
+        res.status(400).json({error: errors.errors});
+    } else {
+        // Add post to db
+        try {
+            const newPost = await Post.create({
+                user: mainUser,
+                title,
+                body
+            });
 
-        res.status(200).json(newPost);
-    } catch(error) {
-        res.status(400).json({error: error.message});
+            res.status(200).json(newPost);
+        } catch(error) {
+            res.status(400).json({error: 'Something went wrong, try again.'});
+        }
     }
-});
-
+    
+})
+]
 // Delete a post
 exports.delete_post = asyncHandler(async (req, res, next) => {
     const { id } = req.params;

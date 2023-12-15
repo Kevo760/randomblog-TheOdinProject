@@ -43,9 +43,13 @@ const FormPost = styled.form`
         padding: 10px;
     }
     .error-msg {
-        padding: 10px;
         color: tomato;
         font-weight: bold;
+    }
+    ul {
+        margin: auto;
+        width: fit-content;
+        text-align: center;
     }
 `
 
@@ -70,6 +74,7 @@ export const PostForm = () => {
         const json = await response.json()
         if(!response.ok) {
             setErr(json.error)
+            console.log(json.error)
         }
 
         if(response.ok) {
@@ -90,6 +95,8 @@ export const PostForm = () => {
                 placeholder='Add Title'
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
+                required={true}
+                minLength={3}
             />
         </div>
 
@@ -99,12 +106,19 @@ export const PostForm = () => {
                 placeholder='Add Body'
                 onChange={(e) => setBody(e.target.value)}
                 value={body}
+                required={true}
+                minLength={3}
             />
         </div>
     
         <button>Add Post</button>
         {
-            err && <div className='error-msg'>{err}</div>
+            err && 
+            <ul>
+                {
+                    err.map(e => <div key={e.path} className='error-msg'>{e.msg}</div>)
+                }
+            </ul>
         }
     </FormPost>
   )
