@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +9,6 @@ const PostSchema = new Schema({
     body: { type: String, required: true, minLength: 3},
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment"}],
   }, { timestamps: true });
-
 
 // Export model
 module.exports = mongoose.model("Post", PostSchema);

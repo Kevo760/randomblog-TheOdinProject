@@ -1,9 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const asyncHandler = require("express-async-handler");
-const Post = require('../models/Post');
-const Comment = require('../models/Comment');
-const User = require('../models/User');
 
 const postControl = require('../controllers/postController');
 

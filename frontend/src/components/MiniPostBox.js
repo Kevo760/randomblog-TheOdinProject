@@ -23,6 +23,16 @@ const PostBox = styled.div`
       align-items: center;
       justify-content: center;
     }
+    .post-top {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .post-created {
+      font-size: 12px;
+      color: rgb(173, 181, 189);
+      font-weight: bold;
+    }
 `
 
 
@@ -41,11 +51,18 @@ function MiniPostBox({ post }) {
     }
 
   }
+
+  const postdate = new Date(post.createdAt)
+  
   
   return (
     <PostBox>
       <div className='post-items'>
-        <h2>{post.title}</h2>
+        <div className='post-top'>
+          <h2>{post.title}</h2>
+          <span className='post-created'>{postdate.toDateString()}</span>
+        </div>
+        
         <p>{post.body}</p>
       </div>
       <div className='delete-post-btn'>

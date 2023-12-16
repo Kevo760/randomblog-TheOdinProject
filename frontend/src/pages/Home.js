@@ -45,9 +45,7 @@ const Home = () => {
            <div className='post-section'>
                 {
                     posts && posts.map((post) => (
-                        <Link to='/' key={post._id}>
-                            <MiniPostBox post={post}/>
-                        </Link>
+                        <MiniPostBox post={post} key={post._id}/>
                     ))
                 }
                 <PostForm />             
