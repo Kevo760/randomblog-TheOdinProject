@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const Schema = mongoose.Schema;
 
@@ -16,6 +17,7 @@ const UserSchema = new Schema({
 
 // Static signup method
 
+// In order for this keyword regular function expression must be used
 UserSchema.statics.signup = async function(username, password) {
   if(!username || !password) {
     throw Error('All fields must be filled')
@@ -25,15 +27,37 @@ UserSchema.statics.signup = async function(username, password) {
     throw Error('Password not strong enough')
   }
 
-  const exists = await this.findOne({ username });
+  const doesUserExist = await this.findOne({ username });
 
-  if(exists) {
+  if(doesUserExist) {
     throw Error('Username already exists')
   }
 
   const hashIt = await bcrypt.hash(password, 10);
 
   const user = await this.create({ username, password: hashIt})
+
+  return user
+}
+
+// In order for this keyword regular function expression must be used
+UserSchema.statics.login = async function(username, password) {
+
+  if(!username || !password) {
+    throw Error('All fields must be filled')
+  };
+
+  const user = await this.findOne({ username });
+
+  if(!user) {
+    throw Error('Invalid username or password')
+  }
+
+  const match = await bcrypt.compare(password, user.password)
+
+  if(!match) {
+    throw Error('Invalid username or password')
+  }
 
   return user
 }
