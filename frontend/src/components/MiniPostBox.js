@@ -10,9 +10,10 @@ const PostBox = styled.div`
     height: fit-content;
     width: 100%;
     max-width: 700px;
-    padding: 10px;
-    background-color: white;
+    padding: 16px;
     border-radius: 4px;
+    color: white;
+    background-color: rgb(33, 37, 41);
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     .post-items {
       display: flex;
@@ -32,6 +33,9 @@ const PostBox = styled.div`
       font-size: 12px;
       color: rgb(173, 181, 189);
       font-weight: bold;
+    }
+    i {
+      cursor: pointer;
     }
 `
 

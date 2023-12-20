@@ -10,7 +10,8 @@ const FormPost = styled.form`
     width: 100%;
     max-width: 700px;
     padding: 20px;
-    background-color: white;
+    color: white;
+    background-color: rgb(33, 37, 41);
     border-radius: 4px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     h3 {
@@ -38,9 +39,17 @@ const FormPost = styled.form`
     }
     input {
         padding: 10px;
+        background-color: rgb(73, 80, 87);
+        color: white;
+        border: none;
+        outline: none;
     }
     textarea {
         padding: 10px;
+        background-color: rgb(73, 80, 87);
+        color: white;
+        border: none;
+        outline: none;
     }
     .error-msg {
         color: tomato;
