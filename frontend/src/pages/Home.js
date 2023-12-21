@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import styled from 'styled-components';
 import MiniPostBox from "../components/MiniPostBox";
 import { Link } from "react-router-dom";
-import { PostForm } from "../components/PostForm";
+import { PostForm } from "./PostForm";
 import { usePostsContext } from "../hooks/usePostsContext";
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const HomePage = styled.div`
@@ -26,18 +27,17 @@ const HomePage = styled.div`
 const Home = () => {
     const { posts, dispatch } = usePostsContext()
 
-
     useEffect(() => {
         const fetchPost = async () => {
             const res = await fetch('/post');
-            const json = await res.json()
+            const json = await res.json();
 
             if(res.ok) {
                 dispatch({ type: 'SET_POSTS', payload: json })
             }
         }
 
-        fetchPost()
+        fetchPost();
     }, [dispatch])
 
     return (
@@ -47,8 +47,7 @@ const Home = () => {
                     posts && posts.map((post) => (
                         <MiniPostBox post={post} key={post._id}/>
                     ))
-                }
-                <PostForm />             
+                }       
            </div>
         </HomePage>
     )

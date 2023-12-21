@@ -1,13 +1,19 @@
 var express = require('express');
 var router = express.Router();
+const requireAuth = require('../middleware/requireAuth');
 
 const postControl = require('../controllers/postController');
+
+
 
 // GET ALL POST
 router.get('/', postControl.get_all_post);
 
 // GET SINGLE POST
 router.get('/:id', postControl.get_a_post);
+
+// Auth middleware - Users need to be logged in to do the task below
+router.use(requireAuth);
 
 // POST A NEW POST
 router.post('/', postControl.create_post);

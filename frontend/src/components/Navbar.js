@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLogout } from '../hooks/useLogout';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const SiteBar = styled.div`
   display: flex;
@@ -54,10 +55,18 @@ const LinksBar = styled.div`
     align-items: center;
     gap: 5px;
   }
+  .username-text {
+    font-weight: bold;
+    width: fit-content;
+    height: 30px;
+    text-align: center;
+    padding: 0px 4px;
+  }
 `
 
 export const Navbar = () => {
-  const { logout } = useLogout() 
+  const { logout } = useLogout();
+  const { user } = useAuthContext();
 
   const handleLogout = () => {
     logout()
@@ -74,16 +83,28 @@ export const Navbar = () => {
         <LinksBar>
           <div className='main-links'>
             <Link className='site-links' to='/'>Home</Link>
+            {/* If user is admin add create post link */}
+            {
+              user && user.userData.status === 'Admin' ?
+              <Link className='site-links' to='/createpost'>Create post</Link>
+              :
+              null
+            }
           </div>
+          {/* If user is logged in add username and log out button if not show sign up and login link */}
+          {
+            user ?
+            <div className='user-nav'>
+              <span className='username-text'>{user.username}</span>
+              <p className='site-links' onClick={e => handleLogout()}>Logout</p>
+            </div>
+            :
+            <div className='user-nav'>
+              <Link className='site-links' to='/login'>Login In</Link>
+              <Link className='site-links' to='/signup'>Sign up</Link>
+            </div>
+          }
           
-          <div className='user-nav'>
-            <Link className='site-links' to='/login'>Login In</Link>
-            <Link className='site-links' to='/signup'>Sign up</Link>
-          </div>
-
-          <div className='user-nav'>
-            <p className='site-links' onClick={e => handleLogout()}>Logout</p>
-          </div>
         </LinksBar>
     </header>
   )

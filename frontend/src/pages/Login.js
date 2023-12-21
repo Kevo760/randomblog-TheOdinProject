@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useLogin } from '../hooks/useLogin';
 
 export const LoginPage = styled.div`
     display: flex;
@@ -57,11 +58,12 @@ export const LoginPage = styled.div`
 export const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login, error, isLoading } = useLogin()
 
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        console.log(username, password)
+        login(username, password)
     };
 
   return (
@@ -85,6 +87,9 @@ export const Login = () => {
             />
 
             <button>Log in</button>
+            {
+                error && <div className='error-text'>{error}</div>
+            }
         </form>
     </LoginPage>
   )

@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const PostBox = styled.div`
     display: grid;
-    grid-template-columns: 95% 5%;
+    grid-template-columns: 95% auto;
     justify-content: center;
     align-items: center;
     height: fit-content;
@@ -41,11 +42,19 @@ const PostBox = styled.div`
 
 
 function MiniPostBox({ post }) {
-  const {dispatch} = usePostsContext()
+  const { dispatch } = usePostsContext();
+  const { user } = useAuthContext();
 
   const handleClick = async() => {
+    if(!user) {
+      return
+    }
+
     const response = await fetch('/post/' + post._id, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+    }
     });
 
     const json = await response.json();
@@ -69,9 +78,9 @@ function MiniPostBox({ post }) {
         
         <p>{post.body}</p>
       </div>
-      <div className='delete-post-btn'>
+      {/* <div className='delete-post-btn'>
         <i className="bi bi-trash-fill" onClick={e => handleClick()}></i>
-      </div>
+      </div> */}
     </PostBox>
   )
 }

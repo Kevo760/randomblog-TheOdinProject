@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const FormPost = styled.form`
     display: flex;
@@ -63,13 +64,19 @@ const FormPost = styled.form`
 `
 
 export const PostForm = () => {
-    const {dispatch} = usePostsContext();
+    const { dispatch } = usePostsContext();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [err, setErr] = useState(null);
+    const { user } = useAuthContext();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+
+        if(!user) {
+            setErr('You must be logged in')
+            return
+        }
 
         const post = {title, body}
 
@@ -77,7 +84,8 @@ export const PostForm = () => {
             method: 'POST',
             body: JSON.stringify(post),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
             }
         })
         const json = await response.json()

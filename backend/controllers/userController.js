@@ -13,11 +13,18 @@ exports.login_user = asyncHandler(async (req, res, next) => {
 
     try {
         const loginUser = await User.login(username, password);
+        console.log(loginUser)
+
+        // Grab username and status
+        const userData = {
+            username: loginUser.username,
+            status: loginUser.status
+        }
 
         // Create token for user logging in
-        const newToken = createToken(loginUser._id);
+        const token = createToken(loginUser._id);
 
-        res.status(200).json({username, newToken});
+        res.status(200).json({userData, token});
     } catch(error) {
 
         res.status(400).json({error: error.message});
@@ -32,11 +39,17 @@ exports.signup_user = asyncHandler(async (req, res, next) => {
     try {
         const newUser = await User.signup(username, password);
 
+
+        // Grab username and status
+        const userData = {
+            username: newUser.username,
+            status: newUser.status
+        }
         // Create a token
-        const newToken = createToken(newUser._id);
+        const token = createToken(newUser._id);
 
 
-        res.status(200).json({newUser, newToken});
+        res.status(200).json({userData, token});
     } catch(error) {
 
         res.status(400).json({error: error.message});
