@@ -3,6 +3,15 @@ import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 
+const FormPage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+`
+
 const FormPost = styled.form`
     display: flex;
     flex-direction: column;
@@ -10,6 +19,7 @@ const FormPost = styled.form`
     height: fit-content;
     width: 100%;
     max-width: 700px;
+    margin-top: 40px;
     padding: 20px;
     color: white;
     background-color: rgb(33, 37, 41);
@@ -52,29 +62,20 @@ const FormPost = styled.form`
         border: none;
         outline: none;
     }
-    .error-msg {
-        color: tomato;
-        font-weight: bold;
-    }
-    ul {
-        margin: auto;
-        width: fit-content;
-        text-align: center;
-    }
 `
 
 export const PostForm = () => {
     const { dispatch } = usePostsContext();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
-    const [err, setErr] = useState(null);
+    const [error, setError] = useState(null);
     const { user } = useAuthContext();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
 
         if(!user) {
-            setErr('You must be logged in')
+            setError('You must be logged in')
             return
         }
 
@@ -90,7 +91,7 @@ export const PostForm = () => {
         })
         const json = await response.json()
         if(!response.ok) {
-            setErr(json.error)
+            setError(json.error)
             console.log(json.error)
         }
 
@@ -98,45 +99,42 @@ export const PostForm = () => {
             dispatch({type: 'CREATE_POST', payload: json})
             setTitle('');
             setBody('');
-            setErr(null);
+            setError(null);
             console.log('New post addded', json);
         }
     }
 
   return (
-    <FormPost className='create' onSubmit={handleSubmit}>
-        <h3>Add Post</h3>
-        <div className='form-group'>
-            <input 
-                type='text'
-                placeholder='Add Title'
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-                required={true}
-                minLength={3}
-            />
-        </div>
+    <FormPage>
+        <FormPost className='create' onSubmit={handleSubmit}>
+            <h3>Add Post</h3>
+            <div className='form-group'>
+                <input 
+                    type='text'
+                    placeholder='Add Title'
+                    onChange={(e) => setTitle(e.target.value)}
+                    value={title}
+                    required={true}
+                    minLength={3}
+                />
+            </div>
 
-        <div className='form-group'>
-            <textarea
-                type='text'
-                placeholder='Add Body'
-                onChange={(e) => setBody(e.target.value)}
-                value={body}
-                required={true}
-                minLength={3}
-            />
-        </div>
-    
-        <button>Add Post</button>
-        {
-            err && 
-            <ul>
-                {
-                    err.map(e => <div key={e.path} className='error-msg'>{e.msg}</div>)
-                }
-            </ul>
-        }
-    </FormPost>
+            <div className='form-group'>
+                <textarea
+                    type='text'
+                    placeholder='Add Body'
+                    onChange={(e) => setBody(e.target.value)}
+                    value={body}
+                    required={true}
+                    minLength={3}
+                />
+            </div>
+        
+            <button>Add Post</button>
+            {
+                error && <div className='error-text'>{error}</div>
+            }
+        </FormPost>
+    </FormPage>
   )
 }

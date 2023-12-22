@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useLogin } from '../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = styled.div`
     display: flex;
@@ -59,11 +60,13 @@ export const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login, error, isLoading } = useLogin()
+    const navigate = useNavigate();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        login(username, password)
+        await login(username, password)
+        navigate('/')
     };
 
   return (

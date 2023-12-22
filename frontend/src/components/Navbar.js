@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -46,7 +46,6 @@ const LinksBar = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 10px;
   }
   .user-nav {
     width: fit-content;
@@ -67,9 +66,11 @@ const LinksBar = styled.div`
 export const Navbar = () => {
   const { logout } = useLogout();
   const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout()
+    navigate('/')
   }
 
 
@@ -86,7 +87,11 @@ export const Navbar = () => {
             {/* If user is admin add create post link */}
             {
               user && user.userData.status === 'Admin' ?
-              <Link className='site-links' to='/createpost'>Create post</Link>
+              <>
+              <Link className='site-links' to='/addpost'>Add post</Link>
+              <Link className='site-links' to='/editpost'>Edit posts</Link>
+              </>
+              
               :
               null
             }
@@ -95,7 +100,7 @@ export const Navbar = () => {
           {
             user ?
             <div className='user-nav'>
-              <span className='username-text'>{user.username}</span>
+              <span className='username-text'>{user.userData.username}</span>
               <p className='site-links' onClick={e => handleLogout()}>Logout</p>
             </div>
             :

@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import { Signup } from './pages/Signup';
 import { Login } from './pages/Login';
 import { useAuthContext } from './hooks/useAuthContext';
+import EditPost from './pages/EditPost';
+import { PostForm } from './pages/PostForm';
 
 function App() {
   const { user } = useAuthContext();
@@ -31,6 +33,17 @@ function App() {
               path='/login'
               element={!user ? <Login /> : <Navigate to='/'/>}
             />
+
+            <Route
+              path='/addpost'
+              element={!user || user.userData !=='Admin' ? <PostForm /> : <Navigate to='/'/>}
+            />
+
+            <Route
+              path='/editpost'
+              element={!user || user.userData !=='Admin' ? <EditPost /> : <Navigate to='/'/>}
+            />
+
           </Routes>
         </div>
       </BrowserRouter>

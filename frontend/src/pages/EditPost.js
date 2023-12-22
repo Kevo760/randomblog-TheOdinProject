@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import styled from 'styled-components';
-import MiniPostBox from "../components/MiniPostBox";
 import { usePostsContext } from "../hooks/usePostsContext";
+import AdminMiniPostBox from "../components/AdminMiniPostBox";
 
-const HomePage = styled.div`
+const EditPostPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@ const HomePage = styled.div`
     }
 `
 
-const Home = () => {
+const EditPost = () => {
     const { posts, dispatch } = usePostsContext()
 
     useEffect(() => {
@@ -37,16 +37,16 @@ const Home = () => {
     }, [dispatch])
 
     return (
-        <HomePage>
+        <EditPostPage>
            <div className='post-section'>
                 {
                     posts && posts.map((post) => (
-                        <MiniPostBox post={post} key={post._id}/>
+                        <AdminMiniPostBox post={post} key={post._id}/>
                     ))
                 }       
            </div>
-        </HomePage>
+        </EditPostPage>
     )
 }
 
-export default Home
+export default EditPost

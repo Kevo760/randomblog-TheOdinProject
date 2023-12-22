@@ -13,7 +13,6 @@ exports.login_user = asyncHandler(async (req, res, next) => {
 
     try {
         const loginUser = await User.login(username, password);
-        console.log(loginUser)
 
         // Grab username and status
         const userData = {
