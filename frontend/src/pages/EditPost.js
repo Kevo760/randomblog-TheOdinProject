@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import styled from 'styled-components';
 import { usePostsContext } from "../hooks/usePostsContext";
 import AdminMiniPostBox from "../components/AdminMiniPostBox";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const EditPostPage = styled.div`
     display: flex;
@@ -21,9 +23,18 @@ const EditPostPage = styled.div`
 `
 
 const EditPost = () => {
-    const { posts, dispatch } = usePostsContext()
+    const { posts, dispatch } = usePostsContext();
+    const { user } = useAuthContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if(!user) {
+            navigate('/login');
+        } else if(user.userData.status !== 'Admin') {
+            navigate('/');
+        }
+
+
         const fetchPost = async () => {
             const res = await fetch('/post');
             const json = await res.json();
@@ -34,7 +45,7 @@ const EditPost = () => {
         }
 
         fetchPost();
-    }, [dispatch])
+    }, [dispatch, user, navigate])
 
     return (
         <EditPostPage>

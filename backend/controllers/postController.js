@@ -4,6 +4,7 @@ const Comment = require('../models/Comment');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 const { body, validationResult } = require("express-validator");
+const jwt = require('jsonwebtoken');
 
 // Get all 
 exports.get_all_post = asyncHandler(async (req, res, next) => {
@@ -21,7 +22,7 @@ exports.get_a_post = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ error: 'No such post'})
     }
 
-    const findPost = await Post.findById(id);
+    const findPost = await Post.findById(id).populate('comment');
 
     if(!findPost) {
         return res.status(400).json({error: 'No such post'})
@@ -51,15 +52,26 @@ exports.create_post = [
     const errors = validationResult(req);
     const { title, body } = req.body;
 
-
-    const mainUser = await User.findOne({ username: 'NotAdmin'})
     if(!errors.isEmpty()) {
         res.status(400).json({error: errors.errors});
     } else {
         // Add post to db
         try {
+            // Verify authentication
+            const { authorization } = req.headers;
+
+            if(!authorization) {
+                throw new Error()
+            }
+
+            // Splits Bearer and token
+            const token = authorization.split(' ')[1]
+            const { _id } = jwt.verify(token, process.env.JWT_SECRET)
+
+
+            const currentUser = await User.findOne({_id})
             const newPost = await Post.create({
-                user: mainUser,
+                user: currentUser,
                 title,
                 body
             });
@@ -72,6 +84,7 @@ exports.create_post = [
     
 })
 ]
+
 // Delete a post
 exports.delete_post = asyncHandler(async (req, res, next) => {
     const { id } = req.params;

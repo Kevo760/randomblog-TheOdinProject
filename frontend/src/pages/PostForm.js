@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const FormPage = styled.div`
     display: flex;
@@ -70,13 +71,15 @@ export const PostForm = () => {
     const [body, setBody] = useState('');
     const [error, setError] = useState(null);
     const { user } = useAuthContext();
+    const navigate = useNavigate();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
 
         if(!user) {
             setError('You must be logged in')
-            return
+        } else if(user.userData.status !== 'Admin') {
+            setError('You must be authorized')
         }
 
         const post = {title, body}
@@ -100,9 +103,18 @@ export const PostForm = () => {
             setTitle('');
             setBody('');
             setError(null);
-            console.log('New post addded', json);
+            navigate('/');
         }
     }
+
+    useEffect(() => {
+        if(!user) {
+            navigate('/login');
+        } else if(user.userData.status !== 'Admin') {
+            navigate('/');
+        }
+
+    }, [user, navigate])
 
   return (
     <FormPage>
@@ -111,6 +123,7 @@ export const PostForm = () => {
             <div className='form-group'>
                 <input 
                     type='text'
+                    name='title'
                     placeholder='Add Title'
                     onChange={(e) => setTitle(e.target.value)}
                     value={title}
@@ -122,6 +135,7 @@ export const PostForm = () => {
             <div className='form-group'>
                 <textarea
                     type='text'
+                    name='body'
                     placeholder='Add Body'
                     onChange={(e) => setBody(e.target.value)}
                     value={body}

@@ -8,6 +8,8 @@ import { Login } from './pages/Login';
 import { useAuthContext } from './hooks/useAuthContext';
 import EditPost from './pages/EditPost';
 import { PostForm } from './pages/PostForm';
+import { PageNotFound } from './pages/PageNotFound';
+import { PostDetail } from './pages/PostDetail';
 
 function App() {
   const { user } = useAuthContext();
@@ -22,6 +24,7 @@ function App() {
             <Route
               path='/'
               element={<Home />}
+              // element={<PostDetail />}
             />
 
             <Route
@@ -42,6 +45,11 @@ function App() {
             <Route
               path='/editpost'
               element={!user || user.userData !=='Admin' ? <EditPost /> : <Navigate to='/'/>}
+            />
+
+            <Route
+              path='/pagenotfound'
+              element={<PageNotFound />}
             />
 
           </Routes>
