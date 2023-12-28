@@ -22,8 +22,8 @@ export const detailPostReducer = (state, action) => {
 
 
 export const DetailPostProvider = ({children}) => {
-    const [ state, dispatch ] = useReducer(postsReducer, {
-        posts: null
+    const [ state, dispatch ] = useReducer(detailPostReducer, {
+        post: null
     });
 
 

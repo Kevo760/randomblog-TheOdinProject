@@ -22,7 +22,7 @@ exports.get_a_post = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ error: 'No such post'})
     }
 
-    const findPost = await Post.findById(id).populate('comment');
+    const findPost = await Post.findById(id).populate('comments');
 
     if(!findPost) {
         return res.status(400).json({error: 'No such post'})

@@ -10,6 +10,7 @@ import EditPost from './pages/EditPost';
 import { PostForm } from './pages/PostForm';
 import { PageNotFound } from './pages/PageNotFound';
 import { PostDetail } from './pages/PostDetail';
+import { DetailPostProvider } from './context/DetailPostContext';
 
 function App() {
   const { user } = useAuthContext();
@@ -45,6 +46,15 @@ function App() {
             <Route
               path='/editpost'
               element={!user || user.userData !=='Admin' ? <EditPost /> : <Navigate to='/'/>}
+            />
+
+            <Route 
+              path='/post/:postID'
+              element={
+              <DetailPostProvider>
+                <PostDetail />
+              </DetailPostProvider>  
+            }
             />
 
             <Route
