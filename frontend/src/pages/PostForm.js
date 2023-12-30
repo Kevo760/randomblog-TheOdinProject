@@ -55,6 +55,7 @@ const FormPost = styled.form`
         color: white;
         border: none;
         outline: none;
+        border-radius: 5px;
     }
     textarea {
         padding: 10px;
@@ -62,6 +63,7 @@ const FormPost = styled.form`
         color: white;
         border: none;
         outline: none;
+        border-radius: 5px;
     }
 `
 

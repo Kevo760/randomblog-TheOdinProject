@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { usePostsContext } from '../hooks/usePostsContext';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const PostBox = styled.div`
     display: grid;
@@ -16,6 +15,9 @@ const PostBox = styled.div`
     color: white;
     background-color: rgb(33, 37, 41);
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    h2 {
+      cursor: pointer;
+    }
     .post-items {
       display: flex;
       flex-direction: column;
@@ -42,45 +44,26 @@ const PostBox = styled.div`
 
 
 function MiniPostBox({ post }) {
-  const { dispatch } = usePostsContext();
-  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleClick = async() => {
-    if(!user) {
-      return
-    }
+  const postdate = new Date(post.createdAt);
 
-    const response = await fetch('/post/' + post._id, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${user.token}`
-    }
-    });
 
-    const json = await response.json();
-
-    if(response.ok) {
-      dispatch({ type: 'DELETE_POST', payload: json})
-    }
-
+  const handlePostLink = (postid) => {
+    navigate(`/post/${postid}`)
   }
 
-  const postdate = new Date(post.createdAt)
-  
   
   return (
     <PostBox>
       <div className='post-items'>
         <div className='post-top'>
-          <h2>{post.title}</h2>
+          <h2 onClick={e => handlePostLink(post._id)}>{post.title}</h2>
           <span className='post-created'>{postdate.toDateString()}</span>
         </div>
         
         <p>{post.body}</p>
       </div>
-      {/* <div className='delete-post-btn'>
-        <i className="bi bi-trash-fill" onClick={e => handleClick()}></i>
-      </div> */}
     </PostBox>
   )
 }

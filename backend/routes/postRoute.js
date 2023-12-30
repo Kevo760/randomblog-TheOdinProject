@@ -6,6 +6,7 @@ const requireAdminAuth = require('../middleware/requireAdminAuth');
 
 
 
+
 // GET ALL POST
 router.get('/', postControl.get_all_post);
 

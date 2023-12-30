@@ -5,6 +5,7 @@ const User = require('../models/User');
 const mongoose = require('mongoose');
 const { body, validationResult } = require("express-validator");
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // Get all 
 exports.get_all_post = asyncHandler(async (req, res, next) => {

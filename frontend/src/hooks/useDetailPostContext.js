@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { DetailPostContext } from "../context/DetailPostContext";
 
 
-export const useDetailpostContext = () => {
+export const useDetailPostContext = () => {
   const context = useContext(DetailPostContext);
 
   if(!context) {
