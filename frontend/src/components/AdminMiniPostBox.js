@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { ToDateTime_Med } from '../functions/convertTime';
 
 const PostBox = styled.div`
     display: grid;
@@ -66,15 +67,12 @@ function AdminMiniPostBox({ post }) {
 
   }
 
-  const postdate = new Date(post.createdAt)
-  
-  
   return (
     <PostBox>
       <div className='post-items'>
         <div className='post-top'>
           <h2>{post.title}</h2>
-          <span className='post-created'>{postdate.toDateString()}</span>
+          <span className='post-created'>{ToDateTime_Med(post.createdAt)}</span>
         </div>
         
         <p>{post.body}</p>

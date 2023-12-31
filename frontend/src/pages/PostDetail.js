@@ -4,6 +4,8 @@ import { useDetailPostContext } from '../hooks/useDetailPostContext';
 import { useNavigate, useParams } from 'react-router-dom'
 import { AddCommentBar } from '../components/AddCommentBar';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { To24HourTime, ToDateTime_Med } from '../functions/convertTime';
+import { useDeleteComment } from '../hooks/useDeleteComment';
 
 
 
@@ -14,6 +16,10 @@ const PostDetailPage = styled.div`
     justify-content: center;
     align-items: center;
     padding: 10px;
+    overflow: auto;
+    height: 100%;
+    max-height: fit-content;
+    padding-bottom: 100px;
     .spinner-border {
       margin-top: 100px;
     }
@@ -47,20 +53,31 @@ const PostDetailPage = styled.div`
 
 const CommentBox = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 20px;
-  height: fit-content;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  max-height: fit-content;
   width: 100%;
   padding: 10px;
+  .comment-top-section {
+    display: grid;
+    grid-template-columns: 15% 80% auto;
+    align-items: center;
+    height: fit-content;
+  }
   .comment-left {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .createdat-text {
-    font-size: 12px;
+    font-size: 10px;
     color: rgb(173, 181, 189);
     font-weight: bold;
+  }
+  .delete-post-btn {
+    text-align: center;
+    cursor: pointer;
   }
   
 `
@@ -69,11 +86,11 @@ export const PostDetail = () => {
   const { post, dispatch } = useDetailPostContext();
   const { postID } = useParams();
   const { user } = useAuthContext();
-
+  const { deleteComment, error } = useDeleteComment();
+  
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const postdate = post && new Date(post.createdAt);
 
   useEffect(() => {
     setIsLoading(true);
@@ -106,7 +123,7 @@ export const PostDetail = () => {
         <div className='postdetail-box'>
           <div className='postdetail-content'>
             <h2>{post.title}</h2>
-            <span className='post-created'>{postdate.toDateString()}</span>
+            <span className='post-created'>{ToDateTime_Med(post.createdAt)}</span>
             <p className='postdetail-body'>{post.body}</p>
           </div>
           <hr></hr>
@@ -116,14 +133,26 @@ export const PostDetail = () => {
               post.comments.map(comment => {
                 return(
                 <CommentBox key={comment._id} className='comment-box'>
-                  
-                  <div className='comment-left'>
-                    <b>{comment.username}</b>
+                  <div className='comment-top-section'>
+                    <div className='comment-left'>
+                      <b>{comment.username}</b>
+                    </div>
+                    <div className='comment-right'>
+                      <p className='createdat-text'>{To24HourTime(comment.createdAt)}</p>
+                      <p>{comment.message}</p>
+                    </div>
+
+                    {
+                      user.userData.userid === comment.commenterid &&
+                      <div className='delete-post-btn'>
+                        <i className="bi bi-trash-fill" onClick={e => deleteComment(comment._id)}></i>
+                      </div>
+                    }
+                    
                   </div>
-                  <div className='comment-right'>
-                    <p className='createdat-text'>{comment.createdAt}</p>
-                    <p>{comment.message}</p>
-                  </div>
+                  {
+                    error && <div className='error-text'>{error}</div>
+                  }
                 </CommentBox>
                 )
               })

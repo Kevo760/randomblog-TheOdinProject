@@ -9,10 +9,18 @@ export const detailPostReducer = (state, action) => {
             return {
                 post: action.payload
             }
-        case 'CREATE_COMMENT':
+        case 'ADD_COMMENT':
             return {
+                ...state,
                 post: {
-                    comments: [action.payload, ...state.posts]
+                    ...state.post, comments: [action.payload, ...state.post.comments]
+                }
+            }
+        case 'DELETE_COMMENT':
+            return {
+                ...state,
+                post: {
+                    ...state.post, comments: state.post.comments.filter((comment) => comment._id !== action.payload._id)
                 }
             }
         default:

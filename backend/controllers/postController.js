@@ -23,7 +23,7 @@ exports.get_a_post = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ error: 'No such post'})
     }
 
-    const findPost = await Post.findById(id).populate('comments');
+    const findPost = await Post.findById(id).populate({path: 'comments', options: {sort: {createdAt: -1}}});
 
     if(!findPost) {
         return res.status(400).json({error: 'No such post'})
@@ -98,14 +98,20 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
     try {
         const findPostToDelete = await Post.findById(id)
 
-        if(findPostToDelete) {
+        // If post comment array is greater than zero delete all comments by postid and then delete post
+        if(findPostToDelete.comments.length > 0) {
+            await Comment.deleteMany({postid: findPostToDelete._id})
             await Post.findByIdAndDelete(id)
-            .then(res.status(200).json(findPostToDelete));
+            res.status(200).json(findPostToDelete);
+        // If post comment array is zero just delete the post
+        } else if(findPostToDelete.comments.length === 0) {
+            await Post.findByIdAndDelete(id)
+            res.status(200).json(findPostToDelete);
+
         } else {
             res.status(400).json({error: error.message});
         }
         
-
     } catch(error) {
 
         res.status(400).json({error: error.message});

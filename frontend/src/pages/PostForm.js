@@ -97,7 +97,6 @@ export const PostForm = () => {
         const json = await response.json()
         if(!response.ok) {
             setError(json.error)
-            console.log(json.error)
         }
 
         if(response.ok) {

@@ -10,5 +10,8 @@ router.use(requireAuth);
 // POST A NEW COMMENT
 router.post('/', commentControl.create_comment);
 
+// DELETE A COMMENT
+router.delete('/:id', commentControl.delete_comment);
+
 
 module.exports = router

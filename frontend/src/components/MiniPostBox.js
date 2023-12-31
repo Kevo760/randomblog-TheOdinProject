@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { ToDateTime_Med } from '../functions/convertTime';
+
 
 const PostBox = styled.div`
     display: grid;
@@ -46,9 +48,7 @@ const PostBox = styled.div`
 function MiniPostBox({ post }) {
   const navigate = useNavigate();
 
-  const postdate = new Date(post.createdAt);
-
-
+  // Navigate to post via postid
   const handlePostLink = (postid) => {
     navigate(`/post/${postid}`)
   }
@@ -58,8 +58,10 @@ function MiniPostBox({ post }) {
     <PostBox>
       <div className='post-items'>
         <div className='post-top'>
+          {/* Click on title handles post link */}
           <h2 onClick={e => handlePostLink(post._id)}>{post.title}</h2>
-          <span className='post-created'>{postdate.toDateString()}</span>
+          {/* converts iso time */}
+          <span className='post-created'>{ToDateTime_Med(post.createdAt)}</span>
         </div>
         
         <p>{post.body}</p>

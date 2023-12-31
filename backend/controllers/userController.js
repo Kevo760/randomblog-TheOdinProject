@@ -17,6 +17,7 @@ exports.login_user = asyncHandler(async (req, res, next) => {
         // Grab username and status
         const userData = {
             username: loginUser.username,
+            userid: loginUser._id,
             status: loginUser.status
         }
 
@@ -41,6 +42,7 @@ exports.signup_user = asyncHandler(async (req, res, next) => {
 
         // Grab username and status
         const userData = {
+            userid: newUser._id,
             username: newUser.username,
             status: newUser.status
         }
