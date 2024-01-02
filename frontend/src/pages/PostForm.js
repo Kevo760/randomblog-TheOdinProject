@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../hooks/useLogout';
 
 const FormPage = styled.div`
     display: flex;
@@ -74,6 +75,7 @@ export const PostForm = () => {
     const [error, setError] = useState(null);
     const { user } = useAuthContext();
     const navigate = useNavigate();
+    const { logout } = useLogout();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -96,6 +98,11 @@ export const PostForm = () => {
         })
         const json = await response.json()
         if(!response.ok) {
+            // if log out error is jwt expired, logout user
+            if(json.error === 'jwt expired'){
+                logout()
+            }
+
             setError(json.error)
         }
 
@@ -107,7 +114,7 @@ export const PostForm = () => {
             navigate('/');
         }
     }
-
+    // If there is no user or if user is not an admin navigate to login
     useEffect(() => {
         if(!user) {
             navigate('/login');

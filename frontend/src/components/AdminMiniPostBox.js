@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ToDateTime_Med } from '../functions/convertTime';
+import { useLogout } from '../hooks/useLogout';
 
 const PostBox = styled.div`
     display: grid;
@@ -45,6 +46,8 @@ const PostBox = styled.div`
 function AdminMiniPostBox({ post }) {
   const { dispatch } = usePostsContext();
   const { user } = useAuthContext();
+  const [error, setError] = useState('');
+  const { logout } = useLogout();
 
   // Admin and user logged in protection
   const handleClick = async() => {
@@ -61,9 +64,17 @@ function AdminMiniPostBox({ post }) {
 
     const json = await response.json();
 
+    if(!response.ok) {
+      // if log out error is jwt expired, logout user
+      if(json.error === 'jwt expired'){
+        logout()
+    }
+      setError(json.error)
+    };
+
     if(response.ok) {
       dispatch({ type: 'DELETE_POST', payload: json})
-    }
+    };
 
   }
 
@@ -76,6 +87,10 @@ function AdminMiniPostBox({ post }) {
         </div>
         
         <p>{post.body}</p>
+
+        {
+          error && <div className='error-text'>{error}</div>
+          }
       </div>
       <div className='delete-post-btn'>
         <i className="bi bi-trash-fill" onClick={e => handleClick()}></i>

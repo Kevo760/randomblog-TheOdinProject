@@ -28,6 +28,7 @@ const EditPost = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+         // If there is no user or if user is not an admin navigate to login
         if(!user) {
             navigate('/login');
         } else if(user.userData.status !== 'Admin') {

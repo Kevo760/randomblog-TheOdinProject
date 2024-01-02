@@ -19,15 +19,15 @@ const requireAdminAuth = async(req, res, next) => {
        const currentUser = await User.findOne({_id})
 
        if(!currentUser || currentUser.status !== 'Admin') {
-        throw new Error()
+        throw new Error('Authorization required')
        }
 
         req.user = currentUser._id
         next()
 
     } catch(error) {
-        console.log(error)
-        res.status(401).json({error: 'Request is not authorized'})
+
+        res.status(401).json({error: error.message})
     }
 }
 
