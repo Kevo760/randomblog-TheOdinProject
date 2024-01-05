@@ -86,14 +86,22 @@ export const PostDetail = () => {
   const { post, dispatch } = useDetailPostContext();
   const { postID } = useParams();
   const { user } = useAuthContext();
-  const { deleteComment, error } = useDeleteComment();
+  const { deleteComment } = useDeleteComment();
   
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
 
+
   useEffect(() => {
     setIsLoading(true);
+
+    // If there is no user or if user is not an admin navigate to login
+    if(!user) {
+      navigate('/login');
+    } else if(user.userData.status !== 'Admin') {
+      navigate('/');
+    }
 
     const fetchPost = async() => {
       const res = await fetch(`/post/${postID}`);
@@ -110,7 +118,7 @@ export const PostDetail = () => {
     }
 
     fetchPost()
-  }, [dispatch, navigate, postID])
+  }, [dispatch, navigate, postID, user])
 
   return (
     <PostDetailPage>
@@ -145,14 +153,11 @@ export const PostDetail = () => {
                     {
                       user.userData.userid === comment.commenterid &&
                       <div className='delete-post-btn'>
-                        <i className="bi bi-trash-fill" onClick={e => deleteComment(comment._id)}></i>
+                        <i className="bi bi-trash-fill" data-toggle="tooltip" data-placement="top" title="Delete comment" onClick={e => deleteComment(comment._id)}></i>
                       </div>
                     }
                     
                   </div>
-                  {
-                    error && <div className='error-text'>{error}</div>
-                  }
                 </CommentBox>
                 )
               })
@@ -160,7 +165,6 @@ export const PostDetail = () => {
               <p>There are no comments</p>
             }
           </div>
-
 
           { user && <AddCommentBar></AddCommentBar> }
         </div>

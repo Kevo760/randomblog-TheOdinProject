@@ -61,6 +61,19 @@ const LinksBar = styled.div`
     text-align: center;
     padding: 0px 4px;
   }
+  .btn {
+    background-color: rgb(0, 168, 232);
+    border: none;
+    border-radius: 0;
+    padding-bottom: 4px;
+  }
+  .dropdown-menu {
+    background-color: rgb(33, 37, 41);
+  }
+  .dropdown-item {
+    width: 100%;
+    color: white;
+  }
 `
 
 export const Navbar = () => {
@@ -87,11 +100,15 @@ export const Navbar = () => {
             {/* If user is admin add create post link */}
             {
               user && user.userData.status === 'Admin' ?
-              <>
-              <Link className='site-links' to='/addpost'>Add post</Link>
-              <Link className='site-links' to='/editpost'>Edit posts</Link>
-              </>
-              
+              <div className="dropdown">
+              <button className="btn btn-secondary dropdown-toggle site-links" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin Controls
+              </button>
+              <ul className="dropdown-menu dropdown-menu-dark">
+                <li><Link className='dropdown-item' to='/addpost'>Add post</Link></li>
+                <li><Link className='dropdown-item' to='/editpost'>Edit posts</Link></li>
+              </ul>
+            </div>
               :
               null
             }

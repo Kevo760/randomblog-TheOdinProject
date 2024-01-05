@@ -11,6 +11,7 @@ import { PostForm } from './pages/PostForm';
 import { PageNotFound } from './pages/PageNotFound';
 import { PostDetail } from './pages/PostDetail';
 import { DetailPostProvider } from './context/DetailPostContext';
+import { PostEditDetail } from './pages/PostDetailEdit';
 
 function App() {
   const { user } = useAuthContext();
@@ -53,6 +54,15 @@ function App() {
               element={
               <DetailPostProvider>
                 <PostDetail />
+              </DetailPostProvider>  
+            }
+            />
+
+            <Route 
+              path='/editpost/:postID'
+              element={
+              <DetailPostProvider>
+                <PostEditDetail />
               </DetailPostProvider>  
             }
             />

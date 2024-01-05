@@ -137,6 +137,7 @@ export const PostForm = () => {
                     value={title}
                     required={true}
                     minLength={3}
+                    maxLength={100}
                 />
             </div>
 

@@ -119,7 +119,22 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
 });
 
 // update a post
-exports.update_post = asyncHandler(async (req, res, next) => {
+exports.update_post = [
+    body('title')
+    .trim()
+    .isLength({min: 3})
+    .escape()
+    .withMessage('Title must have at least 3 characters'),
+    body('body')
+    .trim()
+    .isLength({min: 3})
+    .escape()
+    .withMessage('Body must have at least 3 characters')
+    .isLength({max: 100})
+    .escape()
+    .withMessage('Body must be less than 100 characters')
+    ,
+    asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     // Check if its a valid id type
@@ -139,4 +154,5 @@ exports.update_post = asyncHandler(async (req, res, next) => {
    console.log(currentPost);
 
    res.status(200).json(currentPost);
-});
+})
+]

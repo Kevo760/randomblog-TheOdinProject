@@ -27,6 +27,7 @@ const EditPost = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
 
+
     useEffect(() => {
          // If there is no user or if user is not an admin navigate to login
         if(!user) {

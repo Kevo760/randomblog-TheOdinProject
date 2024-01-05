@@ -4,6 +4,7 @@ import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ToDateTime_Med } from '../functions/convertTime';
 import { useLogout } from '../hooks/useLogout';
+import { useNavigate } from 'react-router-dom';
 
 const PostBox = styled.div`
     display: grid;
@@ -22,8 +23,9 @@ const PostBox = styled.div`
       display: flex;
       flex-direction: column;
     }
-    .delete-post-btn {
+    .control-icons {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
@@ -48,6 +50,12 @@ function AdminMiniPostBox({ post }) {
   const { user } = useAuthContext();
   const [error, setError] = useState('');
   const { logout } = useLogout();
+  const navigate = useNavigate();
+
+  // Navigate to post via postid
+  const handlePostLink = (postid) => {
+    navigate(`/editpost/${postid}`)
+  }
 
   // Admin and user logged in protection
   const handleClick = async() => {
@@ -92,8 +100,9 @@ function AdminMiniPostBox({ post }) {
           error && <div className='error-text'>{error}</div>
           }
       </div>
-      <div className='delete-post-btn'>
-        <i className="bi bi-trash-fill" onClick={e => handleClick()}></i>
+      <div className='control-icons'>
+        <i className="bi bi-pencil-square"  data-toggle="tooltip" data-placement="top" title="Edit post" onClick={e => handlePostLink(post._id)}></i>
+        <i className="bi bi-trash-fill" data-toggle="tooltip" data-placement="top" title="Delete post" onClick={e => handleClick()}></i> 
       </div>
     </PostBox>
   )
