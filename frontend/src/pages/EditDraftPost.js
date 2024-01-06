@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import styled from 'styled-components';
-import { usePostsContext } from "../hooks/usePostsContext";
-import AdminMiniPostBox from "../components/AdminMiniPostBox";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import { useDraftPostContext } from "../hooks/useDraftPostContext";
+import MiniDraftPostBox from "../components/MiniDraftPostBox";
 
-const EditPostPage = styled.div`
+const EditDraftPostPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,6 @@ const EditPostPage = styled.div`
         width: 100%;
         height: fit-content;
         margin-bottom: 10px;
-
     }
     .message-box {
         text-align: center;
@@ -34,11 +33,10 @@ const EditPostPage = styled.div`
     }
 `
 
-const EditPost = () => {
-    const { posts, dispatch } = usePostsContext();
+const EditDraftPost = () => {
+    const { drafts, dispatch } = useDraftPostContext();
     const { user } = useAuthContext();
     const navigate = useNavigate();
-
 
     useEffect(() => {
          // If there is no user or if user is not an admin navigate to login
@@ -50,11 +48,11 @@ const EditPost = () => {
 
 
         const fetchPost = async () => {
-            const res = await fetch('/post');
+            const res = await fetch('/draftpost');
             const json = await res.json();
 
             if(res.ok) {
-                dispatch({ type: 'SET_POSTS', payload: json })
+                dispatch({ type: 'SET_DRAFT', payload: json })
             }
         }
 
@@ -62,22 +60,23 @@ const EditPost = () => {
     }, [dispatch, user, navigate])
 
     return (
-        <EditPostPage>
+        <EditDraftPostPage>
            <div className='post-section'>
                 {
-                    posts && posts.map((post) => (
-                        <AdminMiniPostBox post={post} key={post._id}/>
+                    drafts && 
+                    drafts.map((draftpost) => (
+                        <MiniDraftPostBox draftpost={draftpost} key={draftpost._id}/>
                     ))
                 }
                 {
-                    posts && posts.length === 0 && 
+                    drafts && drafts.length === 0 && 
                     <div className="message-box">
-                        <h2>There are not post</h2>
+                        <h2>There are not draft post</h2>
                     </div> 
-                }        
+                }   
            </div>
-        </EditPostPage>
+        </EditDraftPostPage>
     )
 }
 
-export default EditPost
+export default EditDraftPost

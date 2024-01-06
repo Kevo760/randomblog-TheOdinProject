@@ -11,4 +11,4 @@ const DraftPostSchema = new Schema({
 
 
 // Export model
-module.exports = mongoose.model("Post", DraftPostSchema);
+module.exports = mongoose.model("Draftpost", DraftPostSchema);

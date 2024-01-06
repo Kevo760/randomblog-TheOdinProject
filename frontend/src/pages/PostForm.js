@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
@@ -69,9 +68,9 @@ const FormPost = styled.form`
 `
 
 export const PostForm = () => {
-    const { dispatch } = usePostsContext();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
+    const [checked, setChecked] = useState(false);
     const [error, setError] = useState(null);
     const { user } = useAuthContext();
     const navigate = useNavigate();
@@ -79,7 +78,7 @@ export const PostForm = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-
+        // Checks for user
         if(!user) {
             setError('You must be logged in')
         } else if(user.userData.status !== 'Admin') {
@@ -87,33 +86,71 @@ export const PostForm = () => {
         }
 
         const post = {title, body}
+        try {
+            // If checked is true save post as a draft
+        if(checked) {
+            const response = await fetch('/draftpost', {
+                method: 'POST',
+                body: JSON.stringify(post),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
 
-        const response = await fetch('/post', {
-            method: 'POST',
-            body: JSON.stringify(post),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
+   
+            const json = await response.json()
+            if(!response.ok) {
+                // if log out error is jwt expired, logout user
+                if(json.error === 'jwt expired'){
+                    logout()
+                }
+    
+                setError(json.error)
             }
-        })
-        const json = await response.json()
-        if(!response.ok) {
-            // if log out error is jwt expired, logout user
-            if(json.error === 'jwt expired'){
-                logout()
+    
+            if(response.ok) {
+                setTitle('');
+                setBody('');
+                setError(null);
+                navigate('/editdraftpost');
             }
-
-            setError(json.error)
+        // Else if not checked upload it to post
+        } else {
+            const response = await fetch('/post', {
+                method: 'POST',
+                body: JSON.stringify(post),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+            const json = await response.json()
+            if(!response.ok) {
+                // if log out error is jwt expired, logout user
+                if(json.error === 'jwt expired'){
+                    logout()
+                }
+    
+                setError(json.error)
+            }
+    
+            if(response.ok) {
+                setTitle('');
+                setBody('');
+                setError(null);
+                navigate('/');
+            }
+        }
+        } catch(error) {
+            setError(error.message)
         }
 
-        if(response.ok) {
-            dispatch({type: 'CREATE_POST', payload: json})
-            setTitle('');
-            setBody('');
-            setError(null);
-            navigate('/');
-        }
+        
     }
+
+
+
     // If there is no user or if user is not an admin navigate to login
     useEffect(() => {
         if(!user) {
@@ -152,7 +189,11 @@ export const PostForm = () => {
                     minLength={3}
                 />
             </div>
-        
+
+            <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={(event) => setChecked(event.target.checked)} />
+                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Save as a draft</label>
+            </div>
             <button>Add Post</button>
             {
                 error && <div className='error-text'>{error}</div>

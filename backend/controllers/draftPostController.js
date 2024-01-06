@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Post = require('../models/Post');
-const Comment = require('../models/Comment');
+const DraftPost = require('../models/DraftPost');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 const { body, validationResult } = require("express-validator");
@@ -8,32 +7,32 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Get all 
-exports.get_all_post = asyncHandler(async (req, res, next) => {
-    const allPosts = await Post.find({}).sort({createdAt: -1});
+exports.get_all_draftpost = asyncHandler(async (req, res, next) => {
+    const allDraftPosts = await DraftPost.find({}).sort({createdAt: -1});
 
-    res.status(200).json(allPosts);
+    res.status(200).json(allDraftPosts);
 });
 
 // Get a single post
-exports.get_a_post = asyncHandler(async (req, res, next) => {
+exports.get_a_draftpost = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     // Check if its a valid id type
     if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No such post'})
+        return res.status(404).json({ error: 'No such draft post'})
     }
 
-    const findPost = await Post.findById(id).populate({path: 'comments', options: {sort: {createdAt: -1}}});
+    const findDraftPost = await DraftPost.findById(id);
 
-    if(!findPost) {
-        return res.status(400).json({error: 'No such post'})
+    if(!findDraftPost) {
+        return res.status(400).json({error: 'No such draft post'})
     }
 
-    res.status(200).json(findPost);
+    res.status(200).json(findDraftPost);
 });
 
 // Create a new post
-exports.create_post = [
+exports.create_draftpost = [
     body('title')
     .trim()
     .isLength({min: 3})
@@ -71,13 +70,12 @@ exports.create_post = [
 
 
             const currentUser = await User.findOne({_id})
-            const newPost = await Post.create({
+            const newDraftPost = await DraftPost.create({
                 user: currentUser,
                 title,
                 body
             });
-
-            res.status(200).json(newPost);
+            res.status(200).json(newDraftPost);
         } catch(error) {
             res.status(400).json({error: 'Something went wrong, try again.'});
         }
@@ -87,29 +85,22 @@ exports.create_post = [
 ]
 
 // Delete a post
-exports.delete_post = asyncHandler(async (req, res, next) => {
+exports.delete_draftpost = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     // Check if its a valid id type
     if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No such post'})
+        return res.status(404).json({ error: 'No such draft post'})
     }
      
     try {
-        const findPostToDelete = await Post.findById(id)
+        const findDraftPostToDelete = await DraftPost.findById(id)
 
-        // If post comment array is greater than zero delete all comments by postid and then delete post
-        if(findPostToDelete.comments.length > 0) {
-            await Comment.deleteMany({postid: findPostToDelete._id})
-            await Post.findByIdAndDelete(id)
-            res.status(200).json(findPostToDelete);
-        // If post comment array is zero just delete the post
-        } else if(findPostToDelete.comments.length === 0) {
-            await Post.findByIdAndDelete(id)
-            res.status(200).json(findPostToDelete);
-
+        if(findDraftPostToDelete) {
+            await DraftPost.findByIdAndDelete(id)
+            res.status(200).json(findDraftPostToDelete);
         } else {
-            res.status(400).json({error: error.message});
+            throw new Error('Draft post does not exist')
         }
         
     } catch(error) {
@@ -119,7 +110,7 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
 });
 
 // update a post
-exports.update_post = [
+exports.update_draftpost = [
     body('title')
     .trim()
     .isLength({min: 3})
@@ -139,18 +130,18 @@ exports.update_post = [
 
     // Check if its a valid id type
     if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No such post'});
+        return res.status(404).json({ error: 'No such draft post'});
     };
 
-   const currentPost = await Post.findOneAndUpdate(
+   const currentDraftPost = await DraftPost.findOneAndUpdate(
     { _id: id },
     { ...req.body }
    )
 
-   if(!currentPost) {
-    return res.status(400).json({ error: 'No such post'});
+   if(!currentDraftPost) {
+    return res.status(400).json({ error: 'No such draft post'});
    };
 
-   res.status(200).json(currentPost);
+   res.status(200).json(currentDraftPost);
 })
 ]

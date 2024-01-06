@@ -107,6 +107,7 @@ export const Navbar = () => {
               <ul className="dropdown-menu dropdown-menu-dark">
                 <li><Link className='dropdown-item' to='/addpost'>Add post</Link></li>
                 <li><Link className='dropdown-item' to='/editpost'>Edit posts</Link></li>
+                <li><Link className='dropdown-item' to='/editdraftpost'>Edit draft posts</Link></li>
               </ul>
             </div>
               :

@@ -12,6 +12,8 @@ import { PageNotFound } from './pages/PageNotFound';
 import { PostDetail } from './pages/PostDetail';
 import { DetailPostProvider } from './context/DetailPostContext';
 import { PostEditDetail } from './pages/PostDetailEdit';
+import { DraftPostContextProvider } from './context/DraftPostContext';
+import EditDraftPost from './pages/EditDraftPost';
 
 function App() {
   const { user } = useAuthContext();
@@ -26,7 +28,6 @@ function App() {
             <Route
               path='/'
               element={<Home />}
-              // element={<PostDetail />}
             />
 
             <Route
@@ -61,10 +62,25 @@ function App() {
             <Route 
               path='/editpost/:postID'
               element={
+              !user || user.userData !=='Admin' ?
               <DetailPostProvider>
                 <PostEditDetail />
-              </DetailPostProvider>  
+              </DetailPostProvider> 
+              : 
+              <Navigate to='/'/>
             }
+            />
+
+            <Route
+              path='/editdraftpost'
+              element={
+                !user || user.userData !=='Admin' ?
+                <DraftPostContextProvider>
+                  <EditDraftPost />
+                </DraftPostContextProvider> 
+                : 
+                <Navigate to='/'/>
+              }
             />
 
             <Route

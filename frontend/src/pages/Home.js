@@ -18,6 +18,16 @@ const HomePage = styled.div`
         height: fit-content;
         margin-bottom: 10px;
     }
+    .message-box {
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+        padding: 16px;
+        border-radius: 4px;
+        color: white;
+        background-color: rgb(33, 37, 41);
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    }
 `
 
 const Home = () => {
@@ -43,7 +53,13 @@ const Home = () => {
                     posts && posts.map((post) => (
                         <MiniPostBox post={post} key={post._id}/>
                     ))
-                }       
+                }
+                {
+                    posts && posts.length === 0 && 
+                    <div className="message-box">
+                        <h2>There are not post</h2>
+                    </div> 
+                }    
            </div>
         </HomePage>
     )

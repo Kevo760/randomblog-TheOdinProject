@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 const postRouter = require('./routes/postRoute');
 const userRouter = require('./routes/userRoute');
 const commentRouter = require('./routes/commentRoute');
+const draftPostRouter = require('./routes/draftPostRoute');
 
 var app = express();
 const PORT = process.env.PORT || 4000;
@@ -44,6 +45,7 @@ app.use('/', indexRouter);
 app.use('/post', postRouter);
 app.use('/user', userRouter);
 app.use('/comment', commentRouter);
+app.use('/draftpost', draftPostRouter);
 
 
 // catch 404 and forward to error handler
