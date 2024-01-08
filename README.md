@@ -40,8 +40,22 @@ Users should be able to:
 
 ### Links
 
+LOGIN INFOS:
+
+NotAdmin
+Odin4321.
+
+Raiku
+Odin1234.
+
+Exia
+Odin1234.
+
+Soobaru
+Odin1234.
+
 - Solution URL: [https://github.com/TheLegend760/randomblog-TheOdinProject]
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [https://rando-blog.onrender.com/]
 
 ## My process
 
