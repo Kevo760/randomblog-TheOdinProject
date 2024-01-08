@@ -42,17 +42,13 @@ Users should be able to:
 
 LOGIN INFOS:
 
-NotAdmin
-Odin4321.
+NotAdmin - Odin4321.
 
-Raiku
-Odin1234.
+Raiku - Odin1234.
 
-Exia
-Odin1234.
+Exia - Odin1234.
 
-Soobaru
-Odin1234.
+Soobaru - Odin1234.
 
 - Solution URL: [https://github.com/TheLegend760/randomblog-TheOdinProject]
 - Live Site URL: [https://rando-blog.onrender.com/]
