@@ -6,14 +6,15 @@ import Home from './pages/Home';
 import { Signup } from './pages/Signup';
 import { Login } from './pages/Login';
 import { useAuthContext } from './hooks/useAuthContext';
-import EditPost from './pages/EditPost';
+import EditPost from './pages/PostControl';
 import { PostForm } from './pages/PostForm';
 import { PageNotFound } from './pages/PageNotFound';
 import { PostDetail } from './pages/PostDetail';
 import { DetailPostProvider } from './context/DetailPostContext';
 import { PostEditDetail } from './pages/PostDetailEdit';
 import { DraftPostContextProvider } from './context/DraftPostContext';
-import EditDraftPost from './pages/EditDraftPost';
+import DraftPostControl from './pages/DraftPostControl'
+import { DraftPostEdit } from './pages/DraftPostEdit';
 
 function App() {
   const { user } = useAuthContext();
@@ -46,7 +47,7 @@ function App() {
             />
 
             <Route
-              path='/editpost'
+              path='/postcontrol'
               element={!user || user.userData !=='Admin' ? <EditPost /> : <Navigate to='/'/>}
             />
 
@@ -60,7 +61,7 @@ function App() {
             />
 
             <Route 
-              path='/editpost/:postID'
+              path='/postcontrol/:postID'
               element={
               !user || user.userData !=='Admin' ?
               <DetailPostProvider>
@@ -72,11 +73,23 @@ function App() {
             />
 
             <Route
-              path='/editdraftpost'
+              path='/draftpostcontrol'
               element={
                 !user || user.userData !=='Admin' ?
                 <DraftPostContextProvider>
-                  <EditDraftPost />
+                  <DraftPostControl />
+                </DraftPostContextProvider> 
+                : 
+                <Navigate to='/'/>
+              }
+            />
+
+            <Route
+              path='/draftpostcontrol/:draftID'
+              element={
+                !user || user.userData !=='Admin' ?
+                <DraftPostContextProvider>
+                  <DraftPostEdit />
                 </DraftPostContextProvider> 
                 : 
                 <Navigate to='/'/>

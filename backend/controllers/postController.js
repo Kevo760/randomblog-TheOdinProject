@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
+const DraftPost = require('../models/DraftPost'); 
 const mongoose = require('mongoose');
 const { body, validationResult } = require("express-validator");
 const jwt = require('jsonwebtoken');
@@ -154,3 +155,51 @@ exports.update_post = [
    res.status(200).json(currentPost);
 })
 ]
+
+
+
+// ADD POST AND DELETE DRAFT POST
+
+// Create a new post
+exports.create_post_delete_draft = asyncHandler(async (req, res, next) => {
+    const { title, body, draftid } = req.body;
+
+        // Add post to db
+        try {
+            // Verify authentication
+            const { authorization } = req.headers;
+
+            if(!authorization) {
+                throw new Error()
+            }
+
+            // Splits Bearer and token
+            const token = authorization.split(' ')[1]
+            const { _id } = jwt.verify(token, process.env.JWT_SECRET)
+
+            // Get user and delete draft
+            const currentUser = await User.findOne({_id})
+            const deletedDraft = await DraftPost.findByIdAndDelete(draftid)
+
+            // Check for user and deleted draft if either dont exist throw error
+            if(!currentUser || !deletedDraft) {
+
+                throw new Error('User or draft post does not exist')
+            } else {
+                
+                const newPost = await Post.create({
+                    user: currentUser,
+                    title,
+                    body
+                });
+
+                res.status(200).json(newPost);
+            }
+            
+            
+        } catch(error) {
+
+            res.status(400).json({error: error.message});
+        }
+
+})

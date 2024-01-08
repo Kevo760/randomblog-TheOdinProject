@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDraftPostContext } from "../hooks/useDraftPostContext";
 import MiniDraftPostBox from "../components/MiniDraftPostBox";
 
-const EditDraftPostPage = styled.div`
+const DraftPostControlPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,7 +33,7 @@ const EditDraftPostPage = styled.div`
     }
 `
 
-const EditDraftPost = () => {
+const DraftPostControl = () => {
     const { drafts, dispatch } = useDraftPostContext();
     const { user } = useAuthContext();
     const navigate = useNavigate();
@@ -60,7 +60,7 @@ const EditDraftPost = () => {
     }, [dispatch, user, navigate])
 
     return (
-        <EditDraftPostPage>
+        <DraftPostControlPage>
            <div className='post-section'>
                 {
                     drafts && 
@@ -75,8 +75,8 @@ const EditDraftPost = () => {
                     </div> 
                 }   
            </div>
-        </EditDraftPostPage>
+        </DraftPostControlPage>
     )
 }
 
-export default EditDraftPost
+export default DraftPostControl

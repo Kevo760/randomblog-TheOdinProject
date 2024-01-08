@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import MiniPostBox from "../components/MiniPostBox";
 import { usePostsContext } from "../hooks/usePostsContext";
@@ -32,15 +32,23 @@ const HomePage = styled.div`
 
 const Home = () => {
     const { posts, dispatch } = usePostsContext()
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const fetchPost = async () => {
             const res = await fetch('/post');
             const json = await res.json();
 
+            if(!res.ok) {
+                setError(true)
+            }
+
             if(res.ok) {
+                setError(false)
                 dispatch({ type: 'SET_POSTS', payload: json })
             }
+
+            
         }
 
         fetchPost();
@@ -59,7 +67,13 @@ const Home = () => {
                     <div className="message-box">
                         <h2>There are not post</h2>
                     </div> 
-                }    
+                }
+                {
+                    error && 
+                    <div className="message-box">
+                        <h2>Something went wrong, try again.</h2>
+                    </div> 
+                }
            </div>
         </HomePage>
     )

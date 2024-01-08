@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLogout } from '../hooks/useLogout';
 
-const PostDetailPage = styled.div`
+const DraftPostEditPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,8 +100,8 @@ const FormPost = styled.form`
 `
 
 
-export const PostEditDetail = () => {
-  const { postID } = useParams();
+export const DraftPostEdit = () => {
+  const { draftID } = useParams();
   const { user } = useAuthContext();
   const { logout } = useLogout();
 
@@ -123,7 +123,7 @@ export const PostEditDetail = () => {
 
     const updatePost = {title, body}
 
-    const response = await fetch(`/post/${postID}`, {
+    const response = await fetch(`/draftpost/${draftID}`, {
         method: 'PATCH',
         body: JSON.stringify(updatePost),
         headers: {
@@ -141,7 +141,7 @@ export const PostEditDetail = () => {
     }
 
     if(response.ok) {
-        navigate('/postcontrol');
+        navigate('/draftpostcontrol');
     }
 }
 
@@ -158,7 +158,7 @@ export const PostEditDetail = () => {
     }
 
     const fetchPost = async() => {
-      const res = await fetch(`/post/${postID}`);
+      const res = await fetch(`/draftpost/${draftID}`);
       const json = await res.json();
 
       if(!res.ok) {
@@ -173,10 +173,10 @@ export const PostEditDetail = () => {
     }
 
     fetchPost()
-  }, [navigate, postID, user])
+  }, [ navigate, draftID, user])
 
   return (
-    <PostDetailPage>
+    <DraftPostEditPage>
       {
         isLoading ?
           <div className="spinner-border text-light" role="status">
@@ -184,7 +184,7 @@ export const PostEditDetail = () => {
           </div>
         :
         <FormPost className='create' onSubmit={handleSubmit}>
-        <h3>Update Post</h3>
+        <h3>Update draft post</h3>
         <div className='form-group'>
             <input 
                 type='text'
@@ -217,6 +217,6 @@ export const PostEditDetail = () => {
     </FormPost>
 
       } 
-    </PostDetailPage>
+    </DraftPostEditPage>
   )
 }

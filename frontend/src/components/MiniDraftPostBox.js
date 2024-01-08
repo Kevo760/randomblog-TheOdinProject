@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { usePostsContext } from '../hooks/usePostsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { ToDateTime_Med } from '../functions/convertTime';
 import { useLogout } from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 import { useDraftPostContext } from '../hooks/useDraftPostContext';
+import { useDraftToMainPost } from '../hooks/useDraftToMainPost';
 
 const PostBox = styled.div`
     display: grid;
@@ -43,19 +43,31 @@ const PostBox = styled.div`
     i {
       cursor: pointer;
     }
+    .badge {
+      width: 60px;
+      margin: 0 10px;
+      font-size: 16px;
+      box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    }
+    h2 {
+      display: flex;
+      align-items: center;
+    }
 `
 
 
 function MiniDraftPostBox({ draftpost }) {
-  const { dispatch } = useDraftPostContext()
+  const { dispatch } = useDraftPostContext();
   const { user } = useAuthContext();
   const [error, setError] = useState('');
   const { logout } = useLogout();
+  const { draftToMainPost } = useDraftToMainPost();
   const navigate = useNavigate();
 
   // Navigate to post via postid
   const handlePostLink = (draftpost) => {
-    navigate(`/editdraftpost/${draftpost._id}`)
+    
+    navigate(`/draftpostcontrol/${draftpost}`)
   }
 
 
@@ -88,11 +100,15 @@ function MiniDraftPostBox({ draftpost }) {
 
   }
 
+  const handleConvertDraft = () => {
+    draftToMainPost(draftpost)
+  }
+
   return (
     <PostBox>
       <div className='post-items'>
         <div className='post-top'>
-          <h2>{draftpost.title}</h2>
+          <h2>{draftpost.title}<span className="badge bg-secondary">Draft</span></h2>
           <span className='post-created'>Last Edit: {ToDateTime_Med(draftpost.updatedAt)}</span>
         </div>
         
@@ -103,8 +119,9 @@ function MiniDraftPostBox({ draftpost }) {
           }
       </div>
       <div className='control-icons'>
-        <i className="bi bi-pencil-square"  data-toggle="tooltip" data-placement="top" title="Edit post" onClick={e => handlePostLink(draftpost._id)}></i>
-        <i className="bi bi-trash-fill" data-toggle="tooltip" data-placement="top" title="Delete post" onClick={e => handleClick()}></i> 
+        <i className="bi bi-pencil-square"  data-toggle="tooltip" data-placement="top" title="Edit" onClick={e => handlePostLink(draftpost._id)}></i>
+        <i className="bi bi-trash-fill" data-toggle="tooltip" data-placement="top" title="Delete" onClick={e => handleClick()}></i> 
+        <i className="bi bi-patch-check-fill" data-toggle="tooltip" data-placement="top" title="Convert to post" onClick={e => handleConvertDraft()}></i>
       </div>
     </PostBox>
   )

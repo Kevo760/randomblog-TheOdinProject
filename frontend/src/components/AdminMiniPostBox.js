@@ -54,7 +54,7 @@ function AdminMiniPostBox({ post }) {
 
   // Navigate to post via postid
   const handlePostLink = (postid) => {
-    navigate(`/editpost/${postid}`)
+    navigate(`/postcontrol/${postid}`)
   }
 
   // Admin and user logged in protection

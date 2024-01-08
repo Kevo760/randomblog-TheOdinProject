@@ -5,7 +5,7 @@ import AdminMiniPostBox from "../components/AdminMiniPostBox";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 
-const EditPostPage = styled.div`
+const PostControlPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,7 +34,7 @@ const EditPostPage = styled.div`
     }
 `
 
-const EditPost = () => {
+const PostControl = () => {
     const { posts, dispatch } = usePostsContext();
     const { user } = useAuthContext();
     const navigate = useNavigate();
@@ -62,7 +62,7 @@ const EditPost = () => {
     }, [dispatch, user, navigate])
 
     return (
-        <EditPostPage>
+        <PostControlPage>
            <div className='post-section'>
                 {
                     posts && posts.map((post) => (
@@ -76,8 +76,8 @@ const EditPost = () => {
                     </div> 
                 }        
            </div>
-        </EditPostPage>
+        </PostControlPage>
     )
 }
 
-export default EditPost
+export default PostControl

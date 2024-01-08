@@ -67,7 +67,6 @@ const CommentBox = styled.div`
   }
   .comment-left {
     display: flex;
-    justify-content: center;
     align-items: center;
   }
   .createdat-text {
@@ -99,9 +98,7 @@ export const PostDetail = () => {
     // If there is no user or if user is not an admin navigate to login
     if(!user) {
       navigate('/login');
-    } else if(user.userData.status !== 'Admin') {
-      navigate('/');
-    }
+    } 
 
     const fetchPost = async() => {
       const res = await fetch(`/post/${postID}`);

@@ -25,4 +25,8 @@ router.delete('/:id', postControl.delete_post);
 // UPDATE A POST
 router.patch('/:id', postControl.update_post);
 
+
+///// TURN DRAFT POST TO A NEW MAIN POST AND DELETE DRAFT
+router.post('/convertdraft/', postControl.create_post_delete_draft);
+
 module.exports = router

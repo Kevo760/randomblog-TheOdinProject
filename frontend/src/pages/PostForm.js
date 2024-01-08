@@ -113,7 +113,7 @@ export const PostForm = () => {
                 setTitle('');
                 setBody('');
                 setError(null);
-                navigate('/editdraftpost');
+                navigate('/draftpostcontrol');
             }
         // Else if not checked upload it to post
         } else {
