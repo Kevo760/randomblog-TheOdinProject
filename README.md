@@ -50,7 +50,7 @@ Exia - Odin1234.
 
 Soobaru - Odin1234.
 
-- Solution URL: [https://github.com/TheLegend760/randomblog-TheOdinProject]
+- Solution URL: [https://github.com/kevo760/randomblog-TheOdinProject]
 - Live Site URL: [https://rando-blog.onrender.com/]
 
 ## My process
